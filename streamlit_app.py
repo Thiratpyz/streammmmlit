@@ -24,4 +24,14 @@ class VideoProcessor(VideoProcessorBase):
 st.title("Real-time YOLOv8 Object Detection with Streamlit")
 st.text("Using YOLOv8 model with Streamlit and streamlit-webrtc")
 
-webrtc_streamer(key="example", video_processor_factory=VideoProcessor, mode=WebRtcMode.SENDRECV, media_stream_constraints={"video": True, "audio": False})
+# Use the latest version of streamlit-webrtc API
+ctx = webrtc_streamer(
+    key="example",
+    video_processor_factory=VideoProcessor,
+    mode=WebRtcMode.SENDRECV,
+    media_stream_constraints={"video": True, "audio": False},
+    async_processing=True,
+)
+
+if ctx.video_processor:
+    ctx.video_processor.model = model
