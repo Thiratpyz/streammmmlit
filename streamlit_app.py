@@ -24,9 +24,15 @@ class VideoProcessor(VideoProcessorBase):
 st.title("Real-time YOLOv8 Object Detection with Streamlit")
 st.text("Using YOLOv8 model with Streamlit and streamlit-webrtc")
 
-# Configuration for the STUN server
+# Configuration for the STUN/TURN servers
 RTC_CONFIGURATION = RTCConfiguration({
-    "iceServers": [{"urls": ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"]}]
+    "iceServers": [
+        {"urls": "stun:stun.relay.metered.ca:80"},
+        {"urls": "turn:sg.relay.metered.ca:80", "username": "60af5bc4849e559a1aaf1dbe", "credential": "WPw2tHgvHBnuHSUi"},
+        {"urls": "turn:sg.relay.metered.ca:80?transport=tcp", "username": "60af5bc4849e559a1aaf1dbe", "credential": "WPw2tHgvHBnuHSUi"},
+        {"urls": "turn:sg.relay.metered.ca:443", "username": "60af5bc4849e559a1aaf1dbe", "credential": "WPw2tHgvHBnuHSUi"},
+        {"urls": "turns:sg.relay.metered.ca:443?transport=tcp", "username": "60af5bc4849e559a1aaf1dbe", "credential": "WPw2tHgvHBnuHSUi"}
+    ]
 })
 
 # Initialize the webrtc_streamer and retrieve the context
