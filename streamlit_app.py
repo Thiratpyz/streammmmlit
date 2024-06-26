@@ -21,8 +21,8 @@ class VideoProcessor(VideoProcessorBase):
 
         return av.VideoFrame.from_ndarray(annotated_frame, format="bgr24")
 
-st.title("Real-time YOLOv8 Object Detection with Streamlit")
-st.text("Using YOLOv8 model with Streamlit and streamlit-webrtc")
+st.title("Real-time YOLOv8 Pose Estimation with Streamlit")
+st.text("Using YOLOv8m-pose model with Streamlit and streamlit-webrtc through Metered STUN")
 
 # Configuration for the STUN/TURN servers
 RTC_CONFIGURATION = RTCConfiguration({
