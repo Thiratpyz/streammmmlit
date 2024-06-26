@@ -1,6 +1,6 @@
 import streamlit as st
 import av
-from PIL import Image
+import cv2
 import numpy as np
 from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, WebRtcMode
 from ultralytics import YOLO
@@ -13,21 +13,25 @@ class VideoProcessor(VideoProcessorBase):
         self.model = model
 
     def recv(self, frame):
-        img = frame.to_image()  # Convert to PIL Image
-
-        # Convert PIL Image to numpy array
-        img_np = np.array(img)
+        img = frame.to_ndarray(format="bgr24")
 
         # Process frame with YOLOv8 model
-        results = self.model(img_np, conf=0.3)
+        results = self.model(img, conf=0.3)
         annotated_frame = results[0].plot()
 
-        # Convert numpy array back to PIL Image
-        annotated_img = Image.fromarray(annotated_frame)
-
-        return av.VideoFrame.from_image(annotated_img)
+        return av.VideoFrame.from_ndarray(annotated_frame, format="bgr24")
 
 st.title("Real-time YOLOv8 Object Detection with Streamlit")
 st.text("Using YOLOv8 model with Streamlit and streamlit-webrtc")
 
-webrtc_streamer(key="example", video_processor_factory=VideoProcessor, mode=WebRtcMode.SENDRECV, media_stream_constraints={"video": True, "audio": False})
+# Use the latest version of streamlit-webrtc API
+ctx = webrtc_streamer(
+    key="example",
+    video_processor_factory=VideoProcessor,
+    mode=WebRtcMode.SENDRECV,
+    media_stream_constraints={"video": True, "audio": False},
+    async_processing=True,
+)
+
+if ctx.video_processor:
+    ctx.video_processor.model = model
